@@ -1,13 +1,12 @@
 package com.linhnq.gitmanagement;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.AccessLog;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.io.IOException;
 public class GitManagementApplication {
 
     private static final String COMMON_REPO = "https://github.com/nql1211/demo.git";
-    private static final String BRANCH = "master";
+    private static final String BRANCH = "main";
 
     public static Repository createNewRepository() throws IOException {
         // prepare a new folder

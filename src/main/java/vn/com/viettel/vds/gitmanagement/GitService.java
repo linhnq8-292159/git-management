@@ -1,4 +1,4 @@
-package com.linhnq.gitmanagement;
+package vn.com.viettel.vds.gitmanagement;
 
 import org.gitlab4j.api.models.Project;
 import retrofit2.Call;
@@ -8,12 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 
-public class GitlabService{
+public class GitService{
 
     public static void main(String[] args) {
 
-        String baseUrl = "https://gitlab.com/api/v4/";
-        String token = "glpat-P78sXgd7MYV7dsdW3yM7";
+        String baseUrl = "http://gitlab.orc.com/api/v4/";
+        String token = "glpat-d2BBx28oX7tDE3KQyjsx";
         String projectName = "test3";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -21,7 +21,7 @@ public class GitlabService{
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        GitlabApi service = retrofit.create(GitlabApi.class);
+        GitApi service = retrofit.create(GitApi.class);
         Call<Project> call = service.createProject(token, new Project().withName(projectName));
 
         try {

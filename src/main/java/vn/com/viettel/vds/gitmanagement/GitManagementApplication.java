@@ -1,4 +1,4 @@
-package com.linhnq.gitmanagement;
+package vn.com.viettel.vds.gitmanagement;
 
 import lombok.extern.slf4j.Slf4j;
 

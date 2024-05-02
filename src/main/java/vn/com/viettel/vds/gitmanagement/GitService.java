@@ -22,7 +22,7 @@ public class GitService{
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        GitApi service = retrofit.create(GitApi.class);
+        GitLabApi service = retrofit.create(GitLabApi.class);
 
         ProjectReq request = new ProjectReq(projectName);
 

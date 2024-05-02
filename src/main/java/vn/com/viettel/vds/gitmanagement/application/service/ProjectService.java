@@ -1,8 +1,8 @@
 package vn.com.viettel.vds.gitmanagement.application.service;
 
 
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 import vn.com.viettel.vds.gitmanagement.infrastructure.repo.ProjectRepo;
 
@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class ProjectService {
 
+    @Autowired
     private ProjectRepo projectRepo;
 
     public List<Project> getAllProjects() {

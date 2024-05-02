@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface ProjectRepo extends PagingAndSortingRepository<Project, Long>,
-        JpaSpecificationExecutor<Project> {
-    Optional<Project> findByName(String name);
-
+public interface ProjectRepo extends JpaRepository<Project, Long> {
 
 }

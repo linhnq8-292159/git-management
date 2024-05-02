@@ -1,4 +1,4 @@
-package vn.com.viettel.vds.gitmanagement.application.service.dto.request.git;
+package vn.com.viettel.vds.gitmanagement.application.dto.request.git;
 
 import lombok.AllArgsConstructor;
 

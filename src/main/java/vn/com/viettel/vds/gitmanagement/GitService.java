@@ -5,13 +5,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vn.com.viettel.vds.gitmanagement.application.service.dto.request.git.ProjectReq;
+import vn.com.viettel.vds.gitmanagement.application.dto.request.git.ProjectReq;
 import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 import java.io.IOException;
 
 public class GitService{
 
-    public static void main(String[] args) {
+    public void createProject() throws IOException{
 
         String baseUrl = "http://gitlab.orc.com/api/v4/";
         String token = "glpat-d2BBx28oX7tDE3KQyjsx";
@@ -36,11 +36,7 @@ public class GitService{
                     if (repository != null)
                         System.out.println("Repository created: " + repository.getHttpUrl());
                 } else {
-                    try {
                         System.out.println("Error: " + response.message());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
 

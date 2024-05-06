@@ -1,4 +1,4 @@
-package vn.com.viettel.vds.gitmanagement;
+package vn.com.viettel.vds.gitmanagement.application.service;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

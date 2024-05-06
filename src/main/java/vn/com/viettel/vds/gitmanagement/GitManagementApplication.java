@@ -10,10 +10,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import retrofit2.Call;
 import vn.com.viettel.vds.gitmanagement.application.dto.request.git.ProjectReq;
-import vn.com.viettel.vds.gitmanagement.application.service.ProjectService;
+import vn.com.viettel.vds.gitmanagement.application.service.GitLabApi;
+import vn.com.viettel.vds.gitmanagement.application.service.impl.ProjectService;
 import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 
 
@@ -87,13 +87,13 @@ public class GitManagementApplication {
 //
 //
 
-    @Autowired
+//    @Autowired
     private GitLabApi gitLabApiService;
 
     @Autowired
     private ProjectService projectService;
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     public void manageProject() {
         Project newProject = new Project();
         newProject.setName("test1123");
@@ -113,6 +113,7 @@ public class GitManagementApplication {
             e.printStackTrace();
         }
     }
+
 
     private void cloneAndPushRepository(String projectName, String projectWebUrl, String sourceRepoUrl) {
 
@@ -143,6 +144,8 @@ public class GitManagementApplication {
         }
 
     }
+
+
 
     public static void main(String[] args) throws IOException, GitAPIException {
         SpringApplication.run(GitManagementApplication.class, args);

@@ -20,9 +20,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(name = "project_name")
     private String name;
-
 
     @Column(name = "url")
     @SerializedName("http_url_to_repo")

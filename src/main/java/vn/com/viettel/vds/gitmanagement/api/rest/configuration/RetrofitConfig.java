@@ -14,11 +14,15 @@ public class RetrofitConfig {
     private String gitLabApiUrl;
 
     @Bean
-    public GitLabApiService gitLabApi() {
-        Retrofit retrofit = new Retrofit.Builder()
+    public Retrofit retrofit() {
+        return new Retrofit.Builder()
                 .baseUrl(gitLabApiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+    @Bean
+    public GitLabApiService gitLabApiService(Retrofit retrofit) {
         return retrofit.create(GitLabApiService.class);
     }
 }

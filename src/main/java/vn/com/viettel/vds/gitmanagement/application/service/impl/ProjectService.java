@@ -20,12 +20,6 @@ public class ProjectService {
     @Value("${gitlab.private-token}")
     private String PRIVATE_TOKEN ;
 
-    @Value("${gitlab.url}")
-    private String BASE_REPO_URL;
-
-    @Value("${source.folder}")
-    private String SOURCE_FOLDER;
-
     @Autowired
     private ProjectRepo projectRepo;
 
@@ -51,22 +45,7 @@ public class ProjectService {
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
             throw new RuntimeException("Failed to create project on GitLab", e);
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
-            throw new RuntimeException("Failed to create project on GitLab", e);
         }
-    }
-
-    public Project saveProject(Project project) {
-        return projectRepo.save(project);
-    }
-//
-//    public String getProjectName(Long id) {
-//        return projectRepo.findById(id).get().getName();
-//    }
-
-    public void deleteProject(Long id) {
-        projectRepo.deleteById(id);
     }
 
 }

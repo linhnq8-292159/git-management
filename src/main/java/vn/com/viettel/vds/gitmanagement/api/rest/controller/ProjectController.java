@@ -6,15 +6,18 @@ import vn.com.viettel.vds.gitmanagement.application.service.impl.ProjectService;
 import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 
 @RestController
-@RequestMapping("${app.base-url}/projects")
+@RequestMapping("${app.base-url}")
 public class ProjectController {
 
-    @Autowired
-    private ProjectService projectService;
+    private final ProjectService gitLabService;
 
-    @PostMapping
-    public Project createProject(@RequestParam String projectName) {
-        return projectService.createProject(projectName);
+    @Autowired
+    public ProjectController(ProjectService gitLabService) {
+        this.gitLabService = gitLabService;
     }
 
+    @PostMapping("/projects")
+    public Project createProject(@RequestParam String name) {
+        return gitLabService.createProject(name);
+    }
 }

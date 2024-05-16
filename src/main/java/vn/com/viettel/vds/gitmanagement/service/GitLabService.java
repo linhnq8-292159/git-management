@@ -28,7 +28,7 @@ public class GitLabService {
         this.projectRepository = projectRepository;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://gitlab.com/api/v4/")
+                .baseUrl("http://gitlab.orc.com/api/v4/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

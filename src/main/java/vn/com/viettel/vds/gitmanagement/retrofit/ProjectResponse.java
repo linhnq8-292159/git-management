@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class GitLabProjectResponse {
+public class ProjectResponse {
     private Long id;
 
     private String name;

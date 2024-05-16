@@ -5,44 +5,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import vn.com.viettel.vds.gitmanagement.entity.Project;
 import vn.com.viettel.vds.gitmanagement.repository.ProjectRepository;
-import vn.com.viettel.vds.gitmanagement.retrofit.GitLabApi;
-import vn.com.viettel.vds.gitmanagement.retrofit.GitLabProjectRequest;
-import vn.com.viettel.vds.gitmanagement.retrofit.GitLabProjectResponse;
+import vn.com.viettel.vds.gitmanagement.retrofit.GitLabService;
+import vn.com.viettel.vds.gitmanagement.retrofit.ProjectRequest;
+import vn.com.viettel.vds.gitmanagement.retrofit.ProjectResponse;
 
 import java.io.IOException;
 
 
 @Service
-public class GitLabService {
+public class ProjectService {
 
-    private final ProjectRepository projectRepository;
-    private final GitLabApi gitLabApi;
+    @Autowired
+    private ProjectRepository projectRepository;
+
     private final String gitLabToken = "glpat-SXUAxyMzvzkGWnyDs_Nq";
 
     @Autowired
-    public GitLabService(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://gitlab.orc.com/api/v4/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        this.gitLabApi = retrofit.create(GitLabApi.class);
-    }
+    private GitLabService gitLabApi;
 
     public Project createGitLabProject(String projectName) {
         try {
-            GitLabProjectRequest request = new GitLabProjectRequest(projectName);
-            Call<GitLabProjectResponse> call = gitLabApi.createProject(gitLabToken, request);
-            Response<GitLabProjectResponse> response = call.execute();
+            ProjectRequest request = new ProjectRequest(projectName);
+            Call<ProjectResponse> call = gitLabApi.createProject(gitLabToken, request);
+            Response<ProjectResponse> response = call.execute();
 
             if (response.isSuccessful() && response.body() != null) {
-                GitLabProjectResponse projectResponse = response.body();
+                ProjectResponse projectResponse = response.body();
                 Project project = new Project();
                 project.setName(projectResponse.getName());
                 project.setUrl(projectResponse.getUrl());

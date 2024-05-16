@@ -6,20 +6,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.viettel.vds.gitmanagement.entity.Project;
-import vn.com.viettel.vds.gitmanagement.service.GitLabService;
+import vn.com.viettel.vds.gitmanagement.service.ProjectService;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("${app.base-url}")
 public class ProjectController {
 
-    private final GitLabService gitLabService;
+    private final ProjectService gitLabService;
 
     @Autowired
-    public ProjectController(GitLabService gitLabService) {
+    public ProjectController(ProjectService gitLabService) {
         this.gitLabService = gitLabService;
     }
 
-    @PostMapping
+    @PostMapping("/projects")
     public Project createProject(@RequestParam String name) {
         return gitLabService.createGitLabProject(name);
     }

@@ -3,12 +3,14 @@ package vn.com.viettel.vds.gitmanagement.application.service.impl;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.stereotype.Service;
 import vn.com.viettel.vds.gitmanagement.application.service.IGitService;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 @Service
 public class GitService implements IGitService {
@@ -17,7 +19,7 @@ public class GitService implements IGitService {
     private final CredentialsProvider credentialsProvider;
 
     public GitService() {
-        credentialsProvider = new UsernamePasswordCredentialsProvider("linhnq8", "123123a@");
+        credentialsProvider = new UsernamePasswordCredentialsProvider("root", "123123a@");
     }
 
 
@@ -26,24 +28,25 @@ public class GitService implements IGitService {
         Git.cloneRepository()
                 .setURI(url)
                 .setDirectory(new File(path))
-                .setCredentialsProvider(credentialsProvider)
                 .call();
     }
 
     @Override
-    public void addFile(String path, String fileName, String content) throws IOException, GitAPIException {
-        Git.open(new File(path))
-                .add()
-                .addFilepattern(".")
-                .call();
+    public void pushToRepository(String localRepoPath, String remoteRepoUrl, String username, String password) throws IOException, GitAPIException {
+        try (Git git = Git.open(new File(localRepoPath))) {
+            git.remoteSetUrl()
+                    .setRemoteName("origin")
+                    .setRemoteUri(new URIish(remoteRepoUrl))
+                    .call();
+
+            git.push()
+
+                    .setCredentialsProvider(credentialsProvider)
+                    .call();
+
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-
-    @Override
-    public void push(String path) throws IOException, GitAPIException {
-        Git.open(new File(path))
-                .push()
-                .setCredentialsProvider(credentialsProvider)
-                .call();
-    }
 }

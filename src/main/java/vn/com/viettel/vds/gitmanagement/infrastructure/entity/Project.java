@@ -25,7 +25,6 @@ public class Project {
     private String name;
 
     @Column(name = "url")
-    @SerializedName("http_url_to_repo")
     private String httpUrl;
 
 }

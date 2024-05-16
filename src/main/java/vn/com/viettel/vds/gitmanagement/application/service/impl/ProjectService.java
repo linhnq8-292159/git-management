@@ -9,11 +9,13 @@ import retrofit2.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.viettel.vds.gitmanagement.application.dto.request.git.ProjectReq;
+import vn.com.viettel.vds.gitmanagement.application.dto.response.ProjectRes;
 import vn.com.viettel.vds.gitmanagement.application.service.GitLabApiService;
 import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 import vn.com.viettel.vds.gitmanagement.infrastructure.repo.ProjectRepo;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @Service
 public class ProjectService {
@@ -35,42 +37,55 @@ public class ProjectService {
 
     @Autowired
     private GitService gitService;
+    private final Pattern projectNamePattern = Pattern.compile("^[\\w\\s.+-]*$");
 
-    public Project createProject(String token, ProjectReq projectReq) {
-//        Call<Project> call = gitLabApiService.createProject(token, projectReq);
-//        call.enqueue(new Callback<Project>() {
-//            @Override
-//            public void onResponse(Call<Project> call, Response<Project> response) {
-//                if (response.isSuccessful()) {
-//                    Project project = response.body();
-//                    try {
-//                        gitService.cloneRepository(project.getHttpUrl(), SOURCE_FOLDER + project.getName());
-//                    } catch (GitAPIException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Project> call, Throwable t) {
-//                System.out.println("Failed to create project");
-//            }
-//        });
-//        return null;
-        Call<Project> call = gitLabApiService.createProject(token, projectReq);
+
+    public Project createProject(String projectName) throws IOException {
+        if (!isValidProjectName(projectName)) {
+            throw new IllegalArgumentException("Project name can contain only letters, digits, emoji, '_', '.', '+', dashes, or spaces. It must start with a letter, digit, emoji, or '_'.");
+        }
         try {
-            retrofit2.Response<Project> response = call.execute();
-            if (response.isSuccessful()) {
-                Project project = response.body();
+            ProjectReq projectReq = new ProjectReq(projectName);
+            Call<ProjectRes> call = gitLabApiService.createProject(PRIVATE_TOKEN, projectReq);
+            Response<ProjectRes> response = call.execute();
+
+            if (response.isSuccessful() && response.body() != null) {
+                ProjectRes projectResponse = response.body();
+                Project project = new Project();
+                project.setName(projectResponse.getName());
+                project.setHttpUrl(projectResponse.getHttpUrl());
                 return projectRepo.save(project);
             } else {
-                // Handle error
-                throw new RuntimeException("Failed to create project: " + response.errorBody().string());
+                logError(response);
+                if (response.code() == 401) {
+                    throw new RuntimeException("Unauthorized: Invalid GitLab token");
+                } else {
+                    throw new RuntimeException("Failed to create project on GitLab: " + response.message());
+                }
             }
+        } catch (IOException e) {
+            System.err.println("IOException: " + e.getMessage());
+            throw new RuntimeException("Failed to create project on GitLab", e);
         } catch (Exception e) {
-            // Handle exception
-            throw new RuntimeException("Failed to create project", e);
+            System.err.println("Exception: " + e.getMessage());
+            throw new RuntimeException("Failed to create project on GitLab", e);
         }
+    }
+
+    private boolean isValidProjectName(String projectName) {
+        return projectName != null && projectNamePattern.matcher(projectName).matches() && !projectName.startsWith(".");
+    }
+
+    private void logError(Response<?> response) {
+        try {
+            if (response.errorBody() != null) {
+                System.err.println("Error body: " + response.errorBody().string());
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading errorBody: " + e.getMessage());
+        }
+        System.err.println("Response code: " + response.code());
+        System.err.println("Response message: " + response.message());
     }
 
     public Project saveProject(Project project) {

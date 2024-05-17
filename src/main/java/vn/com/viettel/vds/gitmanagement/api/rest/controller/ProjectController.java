@@ -11,18 +11,31 @@ import vn.com.viettel.vds.gitmanagement.infrastructure.entity.Project;
 import java.io.File;
 
 @RestController
-@RequestMapping("${app.base-url}")
+@RequestMapping("${app.base-url}/projects")
 public class ProjectController {
 
-    private final ProjectService gitLabService;
+    private final ProjectService projectService;
 
     @Autowired
     public ProjectController(ProjectService gitLabService) {
-        this.gitLabService = gitLabService;
+        this.projectService = gitLabService;
     }
 
-    @PostMapping("/projects")
+    @PostMapping
     public Project createProject(@RequestParam String name) {
-        return gitLabService.createProject(name);
+        return projectService.createProject(name);
+    }
+
+    @PostMapping("/{projectName}/files")
+    public ResponseEntity<String> uploadFiles(@PathVariable String projectName,
+                                              @RequestParam("files") MultipartFile files) {
+        try {
+            projectService.addFileToProject(projectName, files);
+            return ResponseEntity.ok("File uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to upload file");
+        }
+
+
     }
 }

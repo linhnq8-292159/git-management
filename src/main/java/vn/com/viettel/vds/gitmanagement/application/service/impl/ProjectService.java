@@ -3,6 +3,7 @@ package vn.com.viettel.vds.gitmanagement.application.service.impl;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 import retrofit2.Call;
 import retrofit2.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import vn.com.viettel.vds.gitmanagement.infrastructure.repo.ProjectRepo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class ProjectService {
@@ -49,8 +51,6 @@ public class ProjectService {
                 project.setName(projectResponse.getName());
                 project.setHttpUrl(projectResponse.getHttpUrl());
 
-
-
                 //Create local repository and push to remote repository
                 File localRepo = new File(SOURCE_FOLDER + projectResponse.getName());
                 if (!localRepo.exists()) {
@@ -70,6 +70,19 @@ public class ProjectService {
         } catch (GitAPIException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void addFileToProject(String projectName, MultipartFile file) throws GitAPIException, IOException {
+        File projectDir = new File(SOURCE_FOLDER + projectName);
+        if (!projectDir.exists()) {
+            throw new RuntimeException("Project does not exist");
+        }
+
+        File destFile = new File(projectDir, Objects.requireNonNull(file.getOriginalFilename()));
+        file.transferTo(destFile);
+
+        gitService.commitAndPushChanges(projectDir.getAbsolutePath(), file.getOriginalFilename(), "linhnq8", "123123a@");
+
     }
 
 }

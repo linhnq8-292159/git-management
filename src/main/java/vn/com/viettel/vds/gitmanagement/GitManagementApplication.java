@@ -11,7 +11,6 @@ import java.io.IOException;
 
 
 @SpringBootApplication
-@EnableScheduling
 @EnableAsync
 public class GitManagementApplication {
 

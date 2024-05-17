@@ -40,12 +40,29 @@ public class GitService implements IGitService {
                     .call();
 
             git.push()
-
                     .setCredentialsProvider(credentialsProvider)
                     .call();
 
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void commitAndPushChanges(String localRepoPath, String filePatten, String username, String password) throws IOException, GitAPIException {
+        try (Git git = Git.open(new File(localRepoPath))) {
+            git.add()
+                    .addFilepattern(filePatten)
+                    .call();
+
+            git.commit()
+                    .setMessage("Add file " + filePatten)
+                    .call();
+
+            git.push()
+                    .setCredentialsProvider(credentialsProvider)
+                    .call();
+
         }
     }
 

@@ -1,6 +1,7 @@
 package vn.com.viettel.vds.gitmanagement.application.service.impl;
 
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +59,7 @@ public class ProjectService {
                 }
 
                 gitService.cloneRepository(BASE_REPO_URL, localRepo.getAbsolutePath());
-                gitService.pushToRepository(localRepo.getAbsolutePath(), projectResponse.getHttpUrl(), "root", "123123a@");
+                gitService.pushToRepository(localRepo.getAbsolutePath(), projectResponse.getHttpUrl());
 
                 return projectRepo.save(project);
             } else {
@@ -75,13 +76,13 @@ public class ProjectService {
     public void addFileToProject(String projectName, MultipartFile file) throws GitAPIException, IOException {
         File projectDir = new File(SOURCE_FOLDER + projectName);
         if (!projectDir.exists()) {
-            throw new RuntimeException("Project does not exist");
+            gitService.cloneRepository(projectRepo.findByName(projectName).getHttpUrl(), projectDir.getAbsolutePath());
         }
 
         File destFile = new File(projectDir, Objects.requireNonNull(file.getOriginalFilename()));
         file.transferTo(destFile);
 
-        gitService.commitAndPushChanges(projectDir.getAbsolutePath(), file.getOriginalFilename(), "linhnq8", "123123a@");
+        gitService.commitAndPushChanges(projectDir.getAbsolutePath(), file.getOriginalFilename());
 
     }
 

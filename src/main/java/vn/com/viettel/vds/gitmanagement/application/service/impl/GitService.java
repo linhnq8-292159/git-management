@@ -28,11 +28,12 @@ public class GitService implements IGitService {
         Git.cloneRepository()
                 .setURI(url)
                 .setDirectory(new File(path))
+                .setCredentialsProvider(credentialsProvider)
                 .call();
     }
 
     @Override
-    public void pushToRepository(String localRepoPath, String remoteRepoUrl, String username, String password) throws IOException, GitAPIException {
+    public void pushToRepository(String localRepoPath, String remoteRepoUrl) throws IOException, GitAPIException {
         try (Git git = Git.open(new File(localRepoPath))) {
             git.remoteSetUrl()
                     .setRemoteName("origin")
@@ -49,20 +50,20 @@ public class GitService implements IGitService {
     }
 
     @Override
-    public void commitAndPushChanges(String localRepoPath, String filePatten, String username, String password) throws IOException, GitAPIException {
+    public void commitAndPushChanges(String localRepoPath, String filePatten) throws IOException, GitAPIException {
         try (Git git = Git.open(new File(localRepoPath))) {
             git.add()
                     .addFilepattern(filePatten)
                     .call();
 
             git.commit()
+
                     .setMessage("Add file " + filePatten)
                     .call();
 
             git.push()
                     .setCredentialsProvider(credentialsProvider)
                     .call();
-
         }
     }
 

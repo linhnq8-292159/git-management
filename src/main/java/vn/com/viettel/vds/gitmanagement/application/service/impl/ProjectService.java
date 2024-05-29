@@ -78,7 +78,7 @@ public class ProjectService {
         if (!projectDir.exists()) {
             gitService.cloneRepository(projectRepo.findByName(projectName).getHttpUrl(), projectDir.getAbsolutePath());
         }
-
+        gitService.pullLatestChanges(projectDir.getAbsolutePath());
         File destFile = new File(projectDir, Objects.requireNonNull(file.getOriginalFilename()));
         file.transferTo(destFile);
 

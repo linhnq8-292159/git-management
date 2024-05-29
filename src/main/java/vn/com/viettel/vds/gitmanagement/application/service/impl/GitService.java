@@ -57,11 +57,18 @@ public class GitService implements IGitService {
                     .call();
 
             git.commit()
-
                     .setMessage("Add file " + filePatten)
                     .call();
 
             git.push()
+                    .setCredentialsProvider(credentialsProvider)
+                    .call();
+        }
+    }
+
+    public void pullLatestChanges(String localRepoPath) throws IOException, GitAPIException {
+        try (Git git = Git.open(new File(localRepoPath))) {
+            git.pull()
                     .setCredentialsProvider(credentialsProvider)
                     .call();
         }
